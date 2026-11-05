@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animated Christmas Tree</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom, #0a2e38, #1a5a6c);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      text-align: center;
+    }
+
+    header {
+      margin-bottom: 30px;
+      padding: 15px;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+      color: #fffb00;
+      animation: titleGlow 3s infinite alternate;
+    }
+
+    @keyframes titleGlow {
+      0% {
+        text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+      }
+
+      100% {
+        text-shadow: 0 0 15px #ff0, 0 0 25px #ff0;
+      }
+    }
+
+    .controls {
+      background: rgba(0, 30, 40, 0.7);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .control-btn {
+      background: #c62828;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .control-btn:hover {
+      background: #ff3d3d;
+      transform: translateY(-3px);
+    }
+
+    .control-btn.active {
+      background: #4caf50;
+      box-shadow: 0 0 15px #4caf50;
+    }
+
+    .tree-container {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    /* Christmas Tree */
+    .tree {
+      position: relative;
+      width: 300px;
+      height: 500px;
+    }
+
+    .tree-trunk {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 60px;
+      background: #8b4513;
+      border-radius: 5px;
+      z-index: 1;
+    }
+
+    .tree-section {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 100px solid transparent;
+      border-right: 100px solid transparent;
+      border-bottom: 140px solid #0a7e0a;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+    }
+
+    .tree-section:nth-child(2) {
+      bottom: 150px;
+      border-left: 120px solid transparent;
+      border-right: 120px solid transparent;
+      border-bottom: 160px solid #0b8e0b;
+      width: 0;
+      height: 0;
+    }
+
+    .tree-section:nth-child(3) {
+      bottom: 250px;
+      border-left: 140px solid transparent;
+      border-right: 140px solid transparent;
+      border-bottom: 180px solid #0c9e0c;
+      width: 0;
+      height: 0;
+    }
+
+    /* Tree decorations */
+    .bauble {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      z-index: 10;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s;
+    }
+
+    .bauble:hover {
+      transform: scale(1.3);
+    }
+
+    .bauble.red {
+      background: radial-gradient(circle at 30% 30%, #ff3333, #cc0000);
+    }
+
+    .bauble.blue {
+      background: radial-gradient(circle at 30% 30%, #3399ff, #0066cc);
+    }
+
+    .bauble.yellow {
+      background: radial-gradient(circle at 30% 30%, #ffff66, #ffcc00);
+    }
+
+    .bauble.purple {
+      background: radial-gradient(circle at 30% 30%, #cc66ff, #9900cc);
+    }
+
+    /* Lights */
+    .light {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      z-index: 5;
+      box-shadow: 0 0 10px;
+    }
+
+    /* Star on top */
+    .star {
+      position: absolute;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 40px;
+      color: gold;
+      z-index: 20;
+      text-shadow: 0 0 20px #ff0;
+      animation: starSpin 4s linear infinite;
+    }
+
+    @keyframes starSpin {
+      0% {
+        transform: translateX(-50%) rotate(0deg);
+      }
+
+      100% {
+        transform: translateX(-50%) rotate(360deg);
+      }
+    }
+
+    /* Snow */
+    .snow {
+      position: fixed;
+      top: -10px;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .snowflake {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+      }
+    }
+
+    /* Presents under tree */
+    .presents {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 400px;
+      height: 80px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      z-index: 3;
+    }
+
+    .present {
+      width: 70px;
+      height: 70px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.5s;
+      cursor: pointer;
+    }
+
+    .present:hover {
+      transform: translateY(-10px);
+    }
+
+    .present-box {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #c62828;
+    }
+
+    .present-lid {
+      position: absolute;
+      width: 110%;
+      height: 20px;
+      background: #ff3d3d;
+      top: -10px;
+      left: -5%;
+    }
+
+    .present-ribbon {
+      position: absolute;
+      width: 20px;
+      height: 100%;
+      background: #ffeb3b;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .present:nth-child(2) .present-box {
+      background: #2196f3;
+    }
+
+    .present:nth-child(2) .present-lid {
+      background: #64b5f6;
+    }
+
+    .present:nth-child(3) .present-box {
+      background: #4caf50;
+    }
+
+    .present:nth-child(3) .present-lid {
+      background: #81c784;
+    }
+
+    /* Message display */
+    .message {
+      background: rgba(0, 40, 60, 0.8);
+      border-radius: 15px;
+      padding: 25px;
+      margin-top: 30px;
+      max-width: 600px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .message h2 {
+      margin-bottom: 15px;
+      color: #ffcc00;
+    }
+
+    footer {
+      margin-top: 30px;
+      padding: 20px;
+      color: #a0d2e6;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .tree {
+        width: 250px;
+        height: 400px;
+      }
+
+      .tree-section,
+      .tree-section:nth-child(2),
+      .tree-section:nth-child(3) {
+        border-bottom-width: 120px;
+      }
+
+      .controls {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .control-btn {
+        width: 90%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-tree"></i> Animated Christmas Tree <i class="fas fa-tree"></i></h1>
+      <p>Click on decorations to interact with them. Use buttons to toggle animations.</p>
+    </header>
+
+    <div class="controls">
+      <button id="toggleLights" class="control-btn active">
+        <i class="fas fa-lightbulb"></i> Toggle Lights
+      </button>
+      <button id="toggleSnow" class="control-btn active">
+        <i class="fas fa-snowflake"></i> Toggle Snow
+      </button>
+      <button id="addBauble" class="control-btn">
+        <i class="fas fa-plus-circle"></i> Add Decoration
+      </button>
+      <button id="removeBauble" class="control-btn">
+        <i class="fas fa-minus-circle"></i> Remove Decoration
+      </button>
+      <button id="starAnimation" class="control-btn active">
+        <i class="fas fa-star"></i> Spin Star
+      </button>
+    </div>
+
+    <div class="tree-container">
+      <div class="tree">
+        <!-- Tree trunk -->
+        <div class="tree-trunk"></div>
+
+        <!-- Tree sections -->
+        <div class="tree-section"></div>
+        <div class="tree-section"></div>
+        <div class="tree-section"></div>
+
+        <!-- Star on top -->
+        <div class="star"><i class="fas fa-star"></i></div>
+
+        <!-- Decorations will be added here by JavaScript -->
+      </div>
+
+      <!-- Presents under the tree -->
+      <div class="presents">
+        <div class="present">
+          <div class="present-box"></div>
+          <div class="present-lid"></div>
+          <div class="present-ribbon"></div>
+        </div>
+        <div class="present">
+          <div class="present-box"></div>
+          <div class="present-lid"></div>
+          <div class="present-ribbon"></div>
+        </div>
+        <div class="present">
+          <div class="present-box"></div>
+          <div class="present-lid"></div>
+          <div class="present-ribbon"></div>
+        </div>
+      </div>
+
+      <!-- Snowflakes -->
+      <div class="snow" id="snowContainer"></div>
+    </div>
+
+    <div class="message">
+      <h2><i class="fas fa-gift"></i> Merry Christmas! <i class="fas fa-gift"></i></h2>
+      <p>This interactive Christmas tree is created with HTML, CSS, and JavaScript. You can toggle the blinking lights,
+        snow animation, and spinning star. Click on the decorations to make them bounce, and add or remove baubles using
+        the control buttons.</p>
+      <p id="clickCount">You've clicked on decorations 0 times.</p>
+    </div>
+
+    <footer>
+      <p>Created with ❤️ using HTML, CSS, and JavaScript | Animated Christmas Tree 2023</p>
+    </footer>
+  </div>
+
+  <script>
+        // DOM elements
+        const tree = document.querySelector('.tree');
+        const snowContainer = document.getElementById('snowContainer');
+        const toggleLightsBtn = document.getElementById('toggleLights');
+        const toggleSnowBtn = document.getElementById('toggleSnow');
+        const addBaubleBtn = document.getElementById('addBauble');
+        const removeBaubleBtn = document.getElementById('removeBauble');
+        const starAnimationBtn = document.getElementById('starAnimation');
+        const clickCountElement = document.getElementById('clickCount');
+        
+        // State variables
+        let lightsOn = true;
+        let snowOn = true;
+        let starSpinning = true;
+        let clickCount = 0;
+        let baubles = [];
+        let lights = [];
+        
+        // Colors for baubles
+        const baubleColors = ['red', 'blue', 'yellow', 'purple'];
+        
+        // Initialize the tree with decorations
+        function initializeTree() {
+            // Create baubles (ornaments)
+            for (let i = 0; i < 12; i++) {
+                addBauble();
+            }
+            
+            // Create lights
+            for (let i = 0; i < 24; i++) {
+                addLight();
+            }
+            
+            // Create snowflakes
+            createSnowflakes();
+            
+            // Update click count display
+            updateClickCount();
+        }
+        
+        // Add a bauble to the tree
+        function addBauble() {
+            const bauble = document.createElement('div');
+            const color = baubleColors[Math.floor(Math.random() * baubleColors.length)];
+            
+            // Position bauble randomly on the tree
+            const section = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3 (tree sections)
+            let left, bottom;
+            
+            // Calculate position based on tree section
+            switch(section) {
+                case 1: // Top section
+                    left = 50 + (Math.random() * 80 - 40); // 10 to 90%
+                    bottom = 250 + (Math.random() * 50); // 250 to 300px
+                    break;
+                case 2: // Middle section
+                    left = 50 + (Math.random() * 100 - 50); // 0 to 100%
+                    bottom = 150 + (Math.random() * 70); // 150 to 220px
+                    break;
+                case 3: // Bottom section
+                    left = 50 + (Math.random() * 120 - 60); // -10 to 110%
+                    bottom = 60 + (Math.random() * 70); // 60 to 130px
+                    break;
+            }
+            
+            bauble.className = `bauble ${color}`;
+            bauble.style.left = `${left}%`;
+            bauble.style.bottom = `${bottom}px`;
+            
+            // Add click event to make bauble bounce
+            bauble.addEventListener('click', function() {
+                this.style.transform = 'scale(1.5)';
+                clickCount++;
+                updateClickCount();
+                
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 300);
+            });
+            
+            tree.appendChild(bauble);
+            baubles.push(bauble);
+        }
+        
+        // Remove a bauble from the tree
+        function removeBauble() {
+            if (baubles.length > 0) {
+                const bauble = baubles.pop();
+                tree.removeChild(bauble);
+            }
+        }
+        
+        // Add a light to the tree
+        function addLight() {
+            const light = document.createElement('div');
+            
+            // Position light randomly on the tree
+            const section = Math.floor(Math.random() * 3) + 1;
+            let left, bottom;
+            
+            switch(section) {
+                case 1:
+                    left = 50 + (Math.random() * 80 - 40);
+                    bottom = 250 + (Math.random() * 50);
+                    break;
+                case 2:
+                    left = 50 + (Math.random() * 100 - 50);
+                    bottom = 150 + (Math.random() * 70);
+                    break;
+                case 3:
+                    left = 50 + (Math.random() * 120 - 60);
+                    bottom = 60 + (Math.random() * 70);
+                    break;
+            }
+            
+            // Random light color
+            const lightColors = ['#ff3333', '#33ff33', '#3333ff', '#ffff33', '#ff33ff', '#33ffff'];
+            const color = lightColors[Math.floor(Math.random() * lightColors.length)];
+            
+            light.className = 'light';
+            light.style.left = `${left}%`;
+            light.style.bottom = `${bottom}px`;
+            light.style.backgroundColor = color;
+            light.style.boxShadow = `0 0 10px ${color}`;
+            
+            // Add blinking animation if lights are on
+            if (lightsOn) {
+                light.style.animation = `lightBlink ${1 + Math.random() * 2}s infinite alternate`;
+            }
+            
+            tree.appendChild(light);
+            lights.push(light);
+        }
+        
+        // Create snowflakes
+        function createSnowflakes() {
+            // Clear existing snowflakes
+            snowContainer.innerHTML = '';
+            
+            if (!snowOn) return;
+            
+            // Create 50 snowflakes
+            for (let i = 0; i < 50; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                
+                // Random size
+                const size = Math.random() * 5 + 2;
+                snowflake.style.width = `${size}px`;
+                snowflake.style.height = `${size}px`;
+                
+                // Random position
+                snowflake.style.left = `${Math.random() * 100}%`;
+                
+                // Random animation duration and delay
+                const duration = Math.random() * 10 + 5;
+                const delay = Math.random() * 5;
+                snowflake.style.animationDuration = `${duration}s`;
+                snowflake.style.animationDelay = `${delay}s`;
+                
+                snowContainer.appendChild(snowflake);
+            }
+        }
+        
+        // Toggle lights on/off
+        function toggleLights() {
+            lightsOn = !lightsOn;
+            toggleLightsBtn.classList.toggle('active');
+            
+            lights.forEach(light => {
+                if (lightsOn) {
+                    light.style.animation = `lightBlink ${1 + Math.random() * 2}s infinite alternate`;
+                    light.style.opacity = '1';
+                } else {
+                    light.style.animation = 'none';
+                    light.style.opacity = '0.3';
+                }
+            });
+        }
+        
+        // Toggle snow on/off
+        function toggleSnow() {
+            snowOn = !snowOn;
+            toggleSnowBtn.classList.toggle('active');
+            
+            if (snowOn) {
+                createSnowflakes();
+            } else {
+                snowContainer.innerHTML = '';
+            }
+        }
+        
+        // Toggle star animation
+        function toggleStarAnimation() {
+            starSpinning = !starSpinning;
+            starAnimationBtn.classList.toggle('active');
+            
+            const star = document.querySelector('.star');
+            if (starSpinning) {
+                star.style.animation = 'starSpin 4s linear infinite';
+            } else {
+                star.style.animation = 'none';
+            }
+        }
+        
+        // Update click count display
+        function updateClickCount() {
+            clickCountElement.textContent = `You've clicked on decorations ${clickCount} times.`;
+        }
+        
+        // Event listeners
+        toggleLightsBtn.addEventListener('click', toggleLights);
+        toggleSnowBtn.addEventListener('click', toggleSnow);
+        addBaubleBtn.addEventListener('click', addBauble);
+        removeBaubleBtn.addEventListener('click', removeBauble);
+        starAnimationBtn.addEventListener('click', toggleStarAnimation);
+        
+        // Add light blinking animation to CSS
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+            @keyframes lightBlink {
+                0%, 100% { opacity: 1; transform: scale(1); }
+                50% { opacity: 0.5; transform: scale(0.9); }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+        
+        // Initialize the tree when page loads
+        window.addEventListener('DOMContentLoaded', initializeTree);
+        
+        // Make presents interactive
+        const presents = document.querySelectorAll('.present');
+        presents.forEach(present => {
+            present.addEventListener('click', function() {
+                this.style.transform = 'translateY(-10px) rotate(10deg)';
+                clickCount++;
+                updateClickCount();
+                
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-10px)';
+                }, 300);
+            });
+        });
+    </script>
+</body>
+
+</html>
+```
